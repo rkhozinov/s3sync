@@ -1,0 +1,22 @@
+sudo: false
+
+language: go
+
+go:
+  - "1.10.x"
+
+git:
+  depth: 5
+
+before_install:
+  - go get -u github.com/golang/dep/cmd/dep
+  - dep ensure -update
+before_deploy:
+  - export OS_TARGETS="linux darwin windows"
+  - export ARCH_TARGETS="386 amd64"
+  - go get github.com/mitchellh/gox
+  - gox -os "$OS_TARGETS" -arch="$ARCH_TARGETS"
+
+script: 
+  - golangci-lint run      
+
